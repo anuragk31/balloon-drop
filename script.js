@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('container');
     const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const blastSound = document.getElementById('blast-sound');
     const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
     
 
@@ -13,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(balloon);
 
         balloon.addEventListener('click', () => {
+            blastSound.currentTime = 0; // Rewind to the start
+            blastSound.play(); // Play the sound effect
             createBurstEffect(balloon);
             balloon.remove();
         });
