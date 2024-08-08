@@ -50,16 +50,30 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(createBalloon, 1000);
 
     fullscreenBtn.addEventListener('click', () => {
+        const elem = document.documentElement;
+
         if (!document.fullscreenElement) {
-            container.requestFullscreen().then(() => {
-                fullscreenBtn.textContent = "Exit Fullscreen";
-            }).catch(err => {
-                alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-            });
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+            fullscreenBtn.textContent = "X";
         } else {
-            document.exitFullscreen().then(() => {
-                fullscreenBtn.textContent = "Enter Fullscreen";
-            });
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE/Edge
+                document.msExitFullscreen();
+            }
+            fullscreenBtn.textContent = "Enter Fullscreen";
         }
     });
 });
