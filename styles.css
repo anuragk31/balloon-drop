@@ -1,0 +1,84 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background: #87CEEB; /* Sky blue background */
+}
+
+#container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#fullscreen-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    background-color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000; /* Ensure the button is above everything else */
+}
+
+.balloon {
+    position: absolute;
+    top: -70px; /* Start just outside the top of the container */
+    background: radial-gradient(circle at bottom, #ff0000, #ff4d4d);
+    width: 50px;
+    height: 70px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    cursor: pointer;
+    animation: drop 10s linear;
+}
+
+@keyframes drop {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(110vh); /* Move beyond the bottom of the container */
+    }
+}
+
+.burst {
+    position: absolute;
+    width: 50px;
+    height: 70px;
+    animation: explode 0.5s forwards;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.fragment {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: inherit;
+    border-radius: 50%;
+    animation: fragment-explode 0.5s forwards;
+}
+
+@keyframes fragment-explode {
+    0% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x), var(--y));
+        opacity: 0;
+    }
+}
