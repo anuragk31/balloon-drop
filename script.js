@@ -10,21 +10,23 @@ document.addEventListener('DOMContentLoaded', () => {
         balloon.className = 'balloon';
         balloon.style.background = `radial-gradient(circle at bottom, ${colors[Math.floor(Math.random() * colors.length)]}, #ffffff)`;
         balloon.style.left = `${Math.random() * 100}%`;
-        balloon.style.animationDuration = `${5 + Math.random() * 5}s`;
+        balloon.style.animationDuration = `${10 + Math.random() * 5}s`;
         container.appendChild(balloon);
 
-        balloon.addEventListener('click', () => {
+        balloon.addEventListener('pointerdown', () => {
+            console.log('pointerdown');
             blastSound.currentTime = 0; // Rewind to the start
             blastSound.play(); // Play the sound effect
             createBurstEffect(balloon);
             balloon.remove();
         });
+        
 
         setTimeout(() => {
             if (container.contains(balloon)) {
                 container.removeChild(balloon);
             }
-        }, 10000);
+        }, 15000);
     }
 
     function createBurstEffect(balloon) {

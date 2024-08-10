@@ -27,13 +27,13 @@ body, html {
 
 .balloon {
     position: absolute;
-    top: -70px; /* Start just outside the top of the container */
+    top: -70px;
     background: radial-gradient(circle at bottom, #ff0000, #ff4d4d);
     width: 50px;
     height: 70px;
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
     cursor: pointer;
-    animation: drop 10s linear;
+    animation: drop 15s linear;
 }
 
 @keyframes drop {
@@ -49,7 +49,7 @@ body, html {
     position: absolute;
     width: 50px;
     height: 70px;
-    animation: explode 0.5s forwards;
+    animation: explode 0.5s reverse forwards;
 }
 
 @keyframes explode {
@@ -58,7 +58,7 @@ body, html {
         opacity: 1;
     }
     100% {
-        transform: scale(2);
+        transform: scale(3);
         opacity: 0;
     }
 }
