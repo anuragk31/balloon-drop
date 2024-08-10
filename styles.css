@@ -47,38 +47,27 @@ body, html {
 
 .burst {
     position: absolute;
-    width: 50px;
-    height: 70px;
+    width: 5px;
+    height: 5px;
     animation: explode 0.5s reverse forwards;
-}
-
-@keyframes explode {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(3);
-        opacity: 0;
-    }
 }
 
 .fragment {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 15px;
+    height: 15px;
     background: inherit;
     border-radius: 50%;
-    animation: fragment-explode 0.5s forwards;
+    animation: fragment-explode 0.5s  forwards;
 }
 
 @keyframes fragment-explode {
     0% {
         transform: translate(0, 0);
-        opacity: 1;
     }
     100% {
         transform: translate(var(--x), var(--y));
-        opacity: 0;
+        width: 7px;
+        height: 7px;
     }
 }

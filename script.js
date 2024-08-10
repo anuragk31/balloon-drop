@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+    function isMobile() {
+        return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    }
+
     const container = document.getElementById('container');
     const fullscreenBtn = document.getElementById('fullscreen-btn');
     const blastSound = document.getElementById('blast-sound');
@@ -13,14 +17,20 @@ document.addEventListener('DOMContentLoaded', () => {
         balloon.style.animationDuration = `${10 + Math.random() * 5}s`;
         container.appendChild(balloon);
 
-        balloon.addEventListener('pointerdown', () => {
-            console.log('pointerdown');
-            blastSound.currentTime = 0; // Rewind to the start
-            blastSound.play(); // Play the sound effect
-            createBurstEffect(balloon);
-            balloon.remove();
-        });
+        const blast = (e)=>{
+            if(balloon.clientWidth > 0){
+                blastSound.currentTime = 0; // Rewind to the start
+                blastSound.play(); // Play the sound effect
+                createBurstEffect(balloon, e);
+                balloon.remove();
+            }
+        }
+
+        balloon.addEventListener('pointerdown', blast);
         
+        if (isMobile()) {
+            balloon.addEventListener("pointerenter", blast);
+        }
 
         setTimeout(() => {
             if (container.contains(balloon)) {
@@ -29,19 +39,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 15000);
     }
 
-    function createBurstEffect(balloon) {
+    function createBurstEffect(balloon, e) {
+        //console.log('Balloon blast before', e);
         const burstContainer = document.createElement('div');
-        burstContainer.className = 'burst';
-        console.log(balloon.style.top, balloon.style.left, balloon);
-        burstContainer.style.left = balloon.style.left;
-        burstContainer.style.top = balloon.getBoundingClientRect().top + "px";
+        burstContainer.className = 'burst';        
+        burstContainer.style.left = e.clientX + "px";//balloon.style.left;
+        burstContainer.style.top = e.clientY + "px";//balloon.getBoundingClientRect().top + "px";
         burstContainer.style.background = balloon.style.background;
 
         for (let i = 0; i < 10; i++) {
             const fragment = document.createElement('div');
             fragment.className = 'fragment';
-            fragment.style.setProperty('--x', `${Math.random() * 200 - 100}px`);
-            fragment.style.setProperty('--y', `${Math.random() * 200 - 100}px`);
+            fragment.style.setProperty('--x', `${Math.random() * 300 - 100}px`);
+            fragment.style.setProperty('--y', `${Math.random() * 300 - 100}px`);
             burstContainer.appendChild(fragment);
         }
 
