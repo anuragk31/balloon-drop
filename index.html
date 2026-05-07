@@ -3,13 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Balloon Drop and Burst</title>
+    <title>🎈 Pop the Balloons! 🎈</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button id="fullscreen-btn">Enter Fullscreen</button>
-    <div id="container"></div>
-    <audio id="blast-sound" src="blast.mp3" preload="auto"></audio>
+    <div id="score-container">
+        <div id="score">Score: <span id="score-value">0</span></div>
+        <div id="encouragement"></div>
+    </div>
+    <button id="fullscreen-btn">⛶</button>
+    <button id="mute-btn">🔊</button>
+    <div id="container">
+        <div id="clouds">
+            <div class="cloud" style="left: 10%; top: 15%; animation-delay: 0s;"></div>
+            <div class="cloud" style="left: 50%; top: 25%; animation-delay: 3s;"></div>
+            <div class="cloud" style="left: 80%; top: 10%; animation-delay: 6s;"></div>
+        </div>
+        <div id="character">
+            <div class="character-body">🐻</div>
+            <div class="character-arms">🎉</div>
+        </div>
+    </div>
+    
+    <!-- Sound Effects -->
+    <audio id="pop-sound-1" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBgoOFhoeJi4yNj5CRk5SVlpeZmpucnZ6foKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc7P0NHS09TV1tfY2drb3N3e3+Dh4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7/AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w=="></source>
+    </audio>
+    <audio id="special-sound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYmNkZWZnqKmqq6ytr7CxsrO0tba3uLm6u7y9vr+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/wABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpbXF1eX2BhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ent8fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6ipqqusra6vsLGys7S1tre4ubq7vL2+v8DBwsPExcbHyMnKy8zNzs/Q0dLT1NXW19jZ2tvc3d7f4OHi4+Tl5ufo6err7O3u7/Dx8vP09fb3+Pn6+/z9/v8="></source>
+    </audio>
+    
     <script src="script.js"></script>
 </body>
 </html>
