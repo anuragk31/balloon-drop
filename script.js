@@ -18,9 +18,58 @@ document.addEventListener('DOMContentLoaded', () => {
     const characterBody = document.querySelector('.character-body');
     const characterArms = document.querySelector('.character-arms');
     
-    // Sound effects
+    // Sound effects - Web Audio API for better compatibility
     const popSound1 = document.getElementById('pop-sound-1');
     const specialSound = document.getElementById('special-sound');
+    
+    // Initialize Web Audio API for older devices
+    let audioContext = null;
+    try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) {
+        console.log('Web Audio API not supported');
+    }
+    
+    // Generate pop sound using Web Audio API
+    function generatePopSound() {
+        if (!audioContext) return;
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1);
+    }
+    
+    // Generate special sound using Web Audio API
+    function generateSpecialSound() {
+        if (!audioContext) return;
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(1500, audioContext.currentTime + 0.2);
+        oscillator.type = 'triangle';
+        
+        gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.2);
+    }
     
     // Bright, high-contrast colors for balloons
     const colors = [
@@ -43,12 +92,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const emojiList = ['😀', '😃', '😄', '😁', '🥳', '🤩', '😎', '🐶', '🐱', '🐼', '🦁', '🐯', '🦊', '🐻'];
 
-    // Play sound with volume control
-    function playSound(sound, volume = 0.3) {
-        if (!isMuted && sound) {
+    // Play sound with volume control - with Web Audio API fallback
+    function playSound(sound, volume = 0.7, isSpecial = false) {
+        if (isMuted) return;
+        
+        // Resume audio context on user interaction (required for mobile)
+        if (audioContext && audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+        
+        // Try HTML5 audio first
+        if (sound && sound.src) {
             sound.volume = volume;
             sound.currentTime = 0;
-            sound.play().catch(e => console.log('Audio play failed:', e));
+            sound.play().catch(e => {
+                console.log('HTML5 audio failed, using Web Audio API');
+                // Fallback to Web Audio API
+                if (isSpecial) {
+                    generateSpecialSound();
+                } else {
+                    generatePopSound();
+                }
+            });
+        } else {
+            // Use Web Audio API directly if no audio element
+            if (isSpecial) {
+                generateSpecialSound();
+            } else {
+                generatePopSound();
+            }
         }
     }
 
@@ -173,9 +245,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Play appropriate sound
                 if (balloonType === 'golden' || balloonType === 'rainbow' || balloonType === 'star') {
-                    playSound(specialSound, 0.4);
+                    playSound(specialSound, 0.4, true);
                 } else {
-                    playSound(popSound1, 0.3);
+                    playSound(popSound1, 0.3, false);
                 }
                 
                 // Update score
