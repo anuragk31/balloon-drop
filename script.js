@@ -283,6 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         
         balloon.addEventListener('pointerdown', blastOnce);
+        balloon.addEventListener('click', blastOnce); // Fallback for older devices
         
         // For mobile - easier touch and drag support
         if (isMobile()) {
@@ -294,6 +295,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     blastOnce(e);
                 }
             });
+            
+            // Add native touch events for older tablets
+            balloon.addEventListener("touchstart", (e) => {
+                e.preventDefault();
+                blastOnce(e.touches[0] || e);
+            }, { passive: false });
+            
+            balloon.addEventListener("touchmove", (e) => {
+                e.preventDefault();
+                // Check if touch is over this balloon
+                const touch = e.touches[0];
+                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (element === balloon || balloon.contains(element)) {
+                    blastOnce(touch);
+                }
+            }, { passive: false });
         }
         
         // Also handle drag across balloon on desktop
@@ -336,6 +353,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     }
 
+    // Global touch tracking for drag-to-blast on touch devices
+    if (isMobile()) {
+        let isDragging = false;
+        
+        document.addEventListener('touchstart', () => {
+            isDragging = true;
+        }, { passive: true });
+        
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        }, { passive: true });
+        
+        // Track touch movement across the screen
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging && e.touches.length > 0) {
+                const touch = e.touches[0];
+                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                
+                // Check if touching a balloon
+                if (element && element.classList.contains('balloon')) {
+                    // Trigger a synthetic pointer event on the balloon
+                    const syntheticEvent = new PointerEvent('pointerenter', {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY,
+                        bubbles: true
+                    });
+                    element.dispatchEvent(syntheticEvent);
+                }
+            }
+        }, { passive: true });
+    }
+    
     // Start creating balloons
     setInterval(createBalloon, 1000);
 
