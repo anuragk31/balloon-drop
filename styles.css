@@ -359,3 +359,364 @@ body, html {
     0%, 100% { transform: translateX(0); }
     50% { transform: translateX(30px); }
 }
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%); /* Bright sky gradient */
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', cursive, sans-serif;
+}
+
+#container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Score Display */
+#score-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 11;
+}
+
+#score {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF1493;
+    text-shadow: 2px 2px 0px #FFD700, 4px 4px 0px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, #FFF9C4 0%, #FFEB3B 100%);
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 3px solid #FF1493;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    animation: score-pulse 0.5s ease;
+}
+
+#score-value {
+    color: #FF1493;
+    font-size: 28px;
+}
+
+@keyframes score-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+#encouragement {
+    font-size: 20px;
+    font-weight: bold;
+    color: #FF6B6B;
+    margin-top: 8px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Control Buttons */
+#fullscreen-btn, #mute-btn {
+    position: fixed;
+    top: 20px;
+    padding: 15px 25px;
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+    color: white;
+    border: 3px solid white;
+    border-radius: 20px;
+    cursor: pointer;
+    z-index: 11;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    touch-action: manipulation; /* Better touch response */
+    min-width: 60px;
+    min-height: 60px; /* Larger touch target */
+}
+
+#fullscreen-btn {
+    right: 20px;
+}
+
+#mute-btn {
+    left: 20px;
+}
+
+#fullscreen-btn:hover, #mute-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+#fullscreen-btn:active, #mute-btn:active {
+    transform: scale(0.95);
+}
+
+.balloon {
+    position: absolute;
+    top: -100px;
+    background: radial-gradient(circle at bottom, #ff0000, #ff4d4d);
+    width: 70px; /* Larger for easier touch */
+    height: 95px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    cursor: pointer;
+    animation: drop 15s linear;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3), inset -5px -5px 15px rgba(255,255,255,0.4);
+    transition: transform 0.1s ease;
+    touch-action: none; /* Prevent scrolling on touch */
+    filter: brightness(1.1) contrast(1.2); /* High contrast */
+    z-index: 50; /* Above clouds, below character */
+}
+
+/* Larger invisible touch target area around balloon */
+.balloon::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    cursor: pointer;
+    /* Invisible but clickable - extends 20px beyond balloon in all directions */
+}
+
+/* Override for emoji balloons - show emoji instead of touch area */
+.balloon.emoji::before {
+    content: attr(data-emoji);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 35px;
+    pointer-events: none; /* Don't block touch events */
+    z-index: 1;
+    /* Reset touch target properties */
+    right: auto;
+    bottom: auto;
+}
+
+/* Balloon string */
+.balloon::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 30px;
+    background: linear-gradient(to bottom, currentColor, transparent);
+    opacity: 0.6;
+}
+
+/* Wobble animation for balloons */
+@keyframes wobble {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(-5px) rotate(-2deg); }
+    75% { transform: translateX(5px) rotate(2deg); }
+}
+
+/* Visual feedback on touch */
+.balloon:active {
+    transform: scale(1.15);
+    filter: brightness(1.3) drop-shadow(0 0 20px currentColor);
+}
+
+/* Special balloon types */
+.balloon.golden {
+    background: radial-gradient(circle at bottom, #FFD700, #FFF9C4);
+    animation: drop 15s linear, sparkle 1s ease-in-out infinite;
+    box-shadow: 0 0 30px #FFD700, 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.balloon.rainbow {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FFD93D 20%, #6BCF7F 40%, #4D96FF 60%, #9D4EDD 80%, #FF6B6B 100%);
+    background-size: 200% 200%;
+    animation: drop 15s linear, rainbow-shift 3s ease infinite;
+}
+
+.balloon.star {
+    background: radial-gradient(circle at bottom, #FF1493, #FF69B4);
+    box-shadow: 0 0 25px #FF1493, 0 8px 20px rgba(0,0,0,0.3);
+}
+
+
+@keyframes sparkle {
+    0%, 100% { filter: brightness(1.1) contrast(1.2); }
+    50% { filter: brightness(1.4) contrast(1.3) drop-shadow(0 0 15px #FFD700); }
+}
+
+@keyframes rainbow-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes drop {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(110vh) rotate(10deg);
+        opacity: 0.9;
+    }
+}
+
+.burst {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    animation: explode 0.5s reverse forwards;
+    pointer-events: none;
+    z-index: 60; /* Above balloons */
+}
+
+/* Visual feedback - touch ripple */
+.touch-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    width: 100px;
+    height: 100px;
+    margin-left: -50px;
+    margin-top: -50px;
+    animation: ripple 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.fragment {
+    position: absolute;
+    width: 20px; /* Larger fragments */
+    height: 20px;
+    background: inherit;
+    border-radius: 50%;
+    animation: fragment-explode 0.5s forwards;
+    box-shadow: 0 0 10px currentColor;
+}
+
+@keyframes fragment-explode {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x), var(--y)) rotate(360deg);
+        width: 10px;
+        height: 10px;
+        opacity: 0;
+    }
+}
+
+/* Character at bottom */
+#character {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 11;
+    text-align: center;
+}
+
+.character-body {
+    font-size: 80px;
+    animation: character-idle 2s ease-in-out infinite;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+}
+
+.character-arms {
+    font-size: 40px;
+    margin-top: -20px;
+    opacity: 0;
+    animation: celebrate 0.5s ease;
+}
+
+.character-body.celebrating {
+    animation: character-celebrate 0.5s ease;
+}
+
+.character-arms.celebrating {
+    opacity: 1;
+    animation: celebrate 0.5s ease;
+}
+
+@keyframes character-idle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes character-celebrate {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.2) rotate(-10deg); }
+    75% { transform: scale(1.2) rotate(10deg); }
+}
+
+@keyframes celebrate {
+    0% { transform: scale(0) rotate(0deg); opacity: 0; }
+    50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+    100% { transform: scale(1) rotate(360deg); opacity: 1; }
+}
+
+/* Clouds */
+#clouds {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10; /* Behind balloons */
+}
+
+.cloud {
+    position: absolute;
+    width: 120px;
+    height: 50px;
+    background: white;
+    border-radius: 100px;
+    opacity: 0.8;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    animation: float 20s ease-in-out infinite;
+}
+
+.cloud::before,
+.cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+}
+
+.cloud::before {
+    width: 50px;
+    height: 50px;
+    top: -25px;
+    left: 20px;
+}
+
+.cloud::after {
+    width: 60px;
+    height: 40px;
+    top: -15px;
+    right: 20px;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(30px); }
+}

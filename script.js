@@ -272,12 +272,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        balloon.addEventListener('pointerdown', blast);
+        // Track if balloon has been blasted to prevent multiple blasts
+        let hasBlasted = false;
         
-        // For mobile - easier touch
+        const blastOnce = (e) => {
+            if (!hasBlasted) {
+                hasBlasted = true;
+                blast(e);
+            }
+        };
+        
+        balloon.addEventListener('pointerdown', blastOnce);
+        
+        // For mobile - easier touch and drag support
         if (isMobile()) {
-            balloon.addEventListener("pointerenter", blast);
+            balloon.addEventListener("pointerenter", blastOnce);
+            
+            // Add touch move detection for drag-to-blast
+            balloon.addEventListener("pointermove", (e) => {
+                if (e.buttons > 0) { // Check if finger is down while moving
+                    blastOnce(e);
+                }
+            });
         }
+        
+        // Also handle drag across balloon on desktop
+        balloon.addEventListener("pointermove", (e) => {
+            if (e.buttons > 0 && !hasBlasted) { // Mouse/finger is down and dragging
+                blastOnce(e);
+            }
+        });
 
         // Remove balloon after animation completes
         setTimeout(() => {
